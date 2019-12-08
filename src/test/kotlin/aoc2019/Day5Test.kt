@@ -6,7 +6,6 @@ import java.io.File
 
 class Day5Test {
 
-
     @Test
     fun testProcess() {
         var attempt1 = Day5("3,0,4,0,99", 5)
