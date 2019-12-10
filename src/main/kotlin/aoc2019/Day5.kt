@@ -11,7 +11,7 @@ class Day5 {
     }
 
     constructor(instructions: ArrayList<Int>, input: Int) {
-        opcodes = instructions
+        opcodes.addAll(instructions)
         inputStack = LinkedList()
         inputStack.add(input)
     }

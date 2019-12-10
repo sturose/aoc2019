@@ -75,4 +75,47 @@ class Day7Test {
         val process = day7.feedback()
         assertEquals(139629729, process)
     }
+
+    @Test
+    fun testProb2Sample2() {
+        val input = arrayListOf(
+            3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,
+            -5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,
+            53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10
+                               )
+        val phaseOrder = arrayListOf(9,7,8,5,6)
+        val day7 = Day7(phaseOrder, input)
+        val process = day7.feedback()
+        assertEquals(18216, process)
+    }
+
+    @Test
+    fun testProb2() {
+        val file = ClassLoader.getSystemResource("day7.txt").file
+        val inputString = File(file).readText().trim()
+        val input = inputString.split(',').stream().map { str -> str.toInt() }.collect(Collectors.toList())
+
+        var largest = 0
+
+        for (i in 5..9) {
+            for (j in 5..9) {
+                for (k in 5..9) {
+                    for (l in 5..9) {
+                        for (m in 5..9) {
+                            val phaseOrder = arrayListOf(i, j, k, l, m)
+                            if (phaseOrder.distinct().size == phaseOrder.size) {
+                                val day7 = Day7(phaseOrder, ArrayList(input))
+                                val output = day7.feedback()
+                                if (output > largest) {
+                                    largest = output
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        println("Day7Prob2: " + largest)
+    }
 }
