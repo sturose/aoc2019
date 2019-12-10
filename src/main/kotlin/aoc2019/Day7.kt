@@ -19,44 +19,29 @@ class Day7 {
     fun process(): Int {
         var output = 0
         for (phase in phaseOrder) {
-            val stack = Stack<Int>()
-            stack.push(output)
-            stack.push(phase)
-            val day5 = Day5(input, stack)
-            output = day5.processOpCodes()
+            val day5 = Day5(input, phase)
+            day5.addInput(output)
+            do {
+                val result = day5.processOpCodesInterrupt()
+                output = result.second
+            } while (!result.first)
         }
         return output
     }
 
     fun feedback(): Int {
-        var stack = Stack<Int>()
-        stack.push(0)
-        var output = Pair(true, stack)
+        var output = Pair(false, 0)
         var amps = mutableListOf<Day5>()
         for (phase in phaseOrder) {
-            val stack = Stack<Int>()
-            val day5 = Day5(input, stack)
+            val day5 = Day5(input, phase)
             amps.add(day5)
         }
-        var firstRun = true
-        var count = 0
-        while (output.first) {
+        while (!output.first) {
             for (amp in amps) {
-                if (firstRun) {
-                    amp.inputStack.push(phaseOrder[count])
-                }
-                for (value in output.second) {
-                    amp.inputStack.push(value)
-                }
+                amp.addInput(output.second)
                 output = amp.processOpCodesInterrupt()
-                count += 1
-                if (!output.first) {
-                    return output.second[0]
-                }
             }
-            firstRun = false
-            count = 0
         }
-        return output.second[0]
+        return output.second
     }
 }

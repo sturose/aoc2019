@@ -72,6 +72,7 @@ class Day7Test {
                                )
         val phaseOrder = arrayListOf(9, 8, 7, 6, 5)
         val day7 = Day7(phaseOrder, input)
-        assertEquals(139629729, day7.feedback())
+        val process = day7.feedback()
+        assertEquals(139629729, process)
     }
 }
