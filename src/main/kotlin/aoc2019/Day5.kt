@@ -4,113 +4,129 @@ import java.util.*
 
 class Day5 {
 
-    constructor(instructions: String, input: Int) {
-        opcodes = instructions.split(",").map { it.trim().toInt() }.toMutableList()
+    constructor(instructions: String, input: Long) {
+        opcodes = instructions.split(",").map { it.trim().toLong() }.toMutableList()
         inputStack = LinkedList()
         inputStack.add(input)
     }
 
-    constructor(instructions: ArrayList<Int>, input: Int) {
+    constructor(instructions: List<Long>) {
+        opcodes.addAll(instructions)
+        inputStack = LinkedList()
+    }
+
+    constructor(instructions: List<Long>, input: Long) {
         opcodes.addAll(instructions)
         inputStack = LinkedList()
         inputStack.add(input)
     }
 
-    var inputStack: LinkedList<Int>
-    var opcodes = mutableListOf<Int>()
+    var inputStack: LinkedList<Long>
+    var opcodes = mutableListOf<Long>()
     var index = 0
-    var output = 0
+    var output: Long = 0
+    var relativeBase = 0
 
-    fun addInput(addition: Int) {
+    fun addInput(addition: Long) {
         inputStack.add(addition)
     }
 
-    fun processOpCodesInterrupt(): Pair<Boolean, Int> {
-        var action = opcodes[index]
+    fun processOpCodesInterrupt(): Pair<Boolean, Long> {
+        var action = opcodes[index].toInt()
 
         while (action != 99) {
 
             var instructionLength = 4
-            var param1Immediate = false
-            var param2Immediate = false
-            var param3Immediate = false
 
-            if (action > 10) {
-                if (action / 100 % 10 == 1) {
-                    param1Immediate = true
-                }
-                if (action / 1000 % 10 == 1) {
-                    param2Immediate = true
-                }
-                if (action / 10000 % 10 == 1) {
-                    param3Immediate = true
-                }
-                action %= 10
-            }
+            val param1Mode = action / 100 % 10
+            val param2Mode = action / 1000 % 10
+            val param3Mode = action / 10000 % 10
+            action %= 10
 
             when (action) {
                 1 -> {
-                    val val1 = if (param1Immediate) opcodes[index + 1] else opcodes[opcodes[index + 1]]
-                    val val2 = if (param2Immediate) opcodes[index + 2] else opcodes[opcodes[index + 2]]
-                    val position = if (param3Immediate) index + 3 else opcodes[index + 3]
-                    opcodes[position] = val1 + val2
+                    val val1 = getOpcode(getIndex(param1Mode, 1))
+                    val val2 = getOpcode(getIndex(param2Mode, 2))
+                    setOpcode(getIndex(param3Mode, 3), val1 + val2)
                 }
                 2 -> {
-                    val val1 = if (param1Immediate) opcodes[index + 1] else opcodes[opcodes[index + 1]]
-                    val val2 = if (param2Immediate) opcodes[index + 2] else opcodes[opcodes[index + 2]]
-                    val position = if (param3Immediate) index + 3 else opcodes[index + 3]
-                    opcodes[position] = val1 * val2
+                    val val1 = getOpcode(getIndex(param1Mode, 1))
+                    val val2 = getOpcode(getIndex(param2Mode, 2))
+                    setOpcode(getIndex(param3Mode, 3), val1 * val2)
                 }
                 3 -> {
-                    val position = if (param1Immediate) index + 1 else opcodes[index + 1]
                     instructionLength = 2
-                    opcodes[position] = inputStack.poll()
+                    setOpcode(getIndex(param1Mode, 1), inputStack.poll())
                 }
                 4 -> {
-                    val position = if (param1Immediate) index + 1 else opcodes[index + 1]
-                    output = opcodes[position]
+                    output = opcodes[getIndex(param1Mode, 1)]
                     index += 2;
                     return Pair(false, output)
                 }
                 5 -> {
-                    val val1 = if (param1Immediate) opcodes[index + 1] else opcodes[opcodes[index + 1]]
-                    val val2 = if (param2Immediate) opcodes[index + 2] else opcodes[opcodes[index + 2]]
+                    val val1 = getOpcode(getIndex(param1Mode, 1))
+                    val val2 = getOpcode(getIndex(param2Mode, 2))
                     instructionLength = 3
-                    if (val1 != 0) {
+                    if (val1 != 0.toLong()) {
                         instructionLength = 0
-                        index = val2
+                        index = val2.toInt()
                     }
                 }
                 6 -> {
-                    val val1 = if (param1Immediate) opcodes[index + 1] else opcodes[opcodes[index + 1]]
-                    val val2 = if (param2Immediate) opcodes[index + 2] else opcodes[opcodes[index + 2]]
+                    val val1 = getOpcode(getIndex(param1Mode, 1))
+                    val val2 = getOpcode(getIndex(param2Mode, 2))
                     instructionLength = 3
-                    if (val1 == 0) {
+                    if (val1 == 0.toLong()) {
                         instructionLength = 0
-                        index = val2
+                        index = val2.toInt()
                     }
                 }
                 7 -> {
-                    val val1 = if (param1Immediate) opcodes[index + 1] else opcodes[opcodes[index + 1]]
-                    val val2 = if (param2Immediate) opcodes[index + 2] else opcodes[opcodes[index + 2]]
-                    val position = if (param3Immediate) index + 3 else opcodes[index + 3]
+                    val val1 = getOpcode(getIndex(param1Mode, 1))
+                    val val2 = getOpcode(getIndex(param2Mode, 2))
                     val value = if (val1 < val2) 1 else 0
-                    opcodes[position] = value
+                    setOpcode(getIndex(param3Mode, 3), value.toLong())
                 }
                 8 -> {
-                    val val1 = if (param1Immediate) opcodes[index + 1] else opcodes[opcodes[index + 1]]
-                    val val2 = if (param2Immediate) opcodes[index + 2] else opcodes[opcodes[index + 2]]
-                    val position = if (param3Immediate) index + 3 else opcodes[index + 3]
+                    val val1 = getOpcode(getIndex(param1Mode, 1))
+                    val val2 = getOpcode(getIndex(param2Mode, 2))
                     val value = if (val1 == val2) 1 else 0
-                    opcodes[position] = value
+                    setOpcode(getIndex(param3Mode, 3), value.toLong())
+                }
+                9 -> {
+                    instructionLength = 2
+                    relativeBase += getOpcode(getIndex(param1Mode, 1)).toInt()
                 }
 
             }
             index += instructionLength;
-            action = opcodes[index]
+            action = opcodes[index].toInt()
         }
 
         return Pair(true, output)
+    }
+
+    fun getOpcode(index: Int): Long {
+        while (opcodes.size < index + 1) {
+            opcodes.add(0)
+        }
+        return opcodes[index]
+    }
+
+    fun setOpcode(index: Int, value: Long) {
+        while (opcodes.size < index + 1) {
+            opcodes.add(0)
+        }
+        opcodes[index] = value
+    }
+
+    fun getIndex(mode: Int, offset: Int): Int {
+        return when (mode) {
+            0    -> opcodes[index + offset].toInt()
+            1    -> index + offset
+            2    -> relativeBase + opcodes[index + offset].toInt()
+            else -> opcodes[index + offset].toInt()
+        }
     }
 
 }

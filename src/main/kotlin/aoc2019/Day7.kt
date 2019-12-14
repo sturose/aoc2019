@@ -5,19 +5,19 @@ import java.util.*
 class Day7 {
 
 
-    private var phaseOrder: ArrayList<Int>
-    private var input: ArrayList<Int>
+    private var phaseOrder: ArrayList<Long>
+    private var input: ArrayList<Long>
 
     constructor(
-        phaseOrder: ArrayList<Int>,
-        input: ArrayList<Int>
+        phaseOrder: ArrayList<Long>,
+        input: ArrayList<Long>
                ) {
         this.phaseOrder = phaseOrder
         this.input = input
     }
 
-    fun process(): Int {
-        var output = 0
+    fun process(): Long {
+        var output: Long = 0
         for (phase in phaseOrder) {
             val day5 = Day5(input, phase)
             day5.addInput(output)
@@ -29,8 +29,8 @@ class Day7 {
         return output
     }
 
-    fun feedback(): Int {
-        var output = Pair(false, 0)
+    fun feedback(): Long {
+        var output: Pair<Boolean, Long> = Pair(false, 0)
         var amps = mutableListOf<Day5>()
         for (phase in phaseOrder) {
             val day5 = Day5(input, phase)

@@ -9,7 +9,10 @@ class Day5Test {
     @Test
     fun testProcess() {
         var attempt1 = Day5("3,0,4,0,99", 5)
-        val processedOpCodes = attempt1.processOpCodesInterrupt()
+        var processedOpCodes = attempt1.processOpCodesInterrupt()
+        while(!processedOpCodes.first) {
+            processedOpCodes = attempt1.processOpCodesInterrupt()
+        }
         Assertions.assertEquals(5, processedOpCodes.second)
 
         var attempt2 = Day5("3,0,4,0,99", 8)
@@ -20,7 +23,10 @@ class Day5Test {
     @Test
     fun testProcessDay7() {
         var attempt1 = Day5("3,0,4,0,99", 5)
-        val processedOpCodes = attempt1.processOpCodesInterrupt()
+        var processedOpCodes = attempt1.processOpCodesInterrupt()
+        while(!processedOpCodes.first) {
+            processedOpCodes = attempt1.processOpCodesInterrupt()
+        }
         Assertions.assertEquals(5, processedOpCodes.second)
 
         var attempt2 = Day5("3,0,4,0,99", 8)
@@ -32,7 +38,10 @@ class Day5Test {
     @Test
     fun testImmediateMode() {
         var attempt1 = Day5("1002,4,3,4,33", 5)
-        val processedOpCodes = attempt1.processOpCodesInterrupt()
+        var processedOpCodes = attempt1.processOpCodesInterrupt()
+        while(!processedOpCodes.first) {
+            processedOpCodes = attempt1.processOpCodesInterrupt()
+        }
         Assertions.assertEquals(0, processedOpCodes.second)
     }
 
@@ -107,6 +116,9 @@ class Day5Test {
 
         var attempt1 = Day5("3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9", 0)
         var processedOpCodes = attempt1.processOpCodesInterrupt()
+        while(!processedOpCodes.first) {
+            processedOpCodes = attempt1.processOpCodesInterrupt()
+        }
         Assertions.assertEquals(0, processedOpCodes.second)
 
         attempt1 = Day5("3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9", 6)
@@ -128,7 +140,10 @@ class Day5Test {
         val inputString = File(file).readText().trim()
 
         var day5 = Day5(inputString, 5)
-        val processedOpCodes = day5.processOpCodesInterrupt()
+        var processedOpCodes = day5.processOpCodesInterrupt()
+        while(!processedOpCodes.first) {
+            processedOpCodes = day5.processOpCodesInterrupt()
+        }
         println(processedOpCodes)
 
     }
